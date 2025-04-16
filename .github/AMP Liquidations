@@ -1,0 +1,76 @@
+# Update the PDF generation to replace en dash and other non-latin1 characters
+# and regenerate the form
+
+class PDFFormSafe(FPDF):
+    def header(self):
+        self.set_font("Arial", "B", 14)
+        title = "AMP Liquidations - Appliance Service Request Form"
+        self.cell(0, 10, title, ln=True, align="C")
+        self.set_font("Arial", "", 12)
+        self.ln(5)
+
+    def add_section(self, title):
+        self.set_font("Arial", "B", 12)
+        self.cell(0, 10, title, ln=True)
+        self.set_font("Arial", "", 12)
+
+    def add_line(self, label, height=8):
+        self.cell(60, height, label, ln=False)
+        self.cell(0, height, "_" * 80, ln=True)
+
+    def add_multiline(self, label, lines=3):
+        self.cell(0, 8, label, ln=True)
+        for _ in range(lines):
+            self.cell(0, 8, "_" * 120, ln=True)
+
+pdf_safe = PDFFormSafe()
+pdf_safe.add_page()
+
+# Customer Information
+pdf_safe.add_section("Customer Information")
+pdf_safe.add_line("Full Name:")
+pdf_safe.add_line("Phone Number:")
+pdf_safe.add_line("Email Address:")
+pdf_safe.add_line("Street Address:")
+pdf_safe.add_line("City:")
+pdf_safe.add_line("State:")
+pdf_safe.add_line("ZIP Code:")
+
+# Appliance Information
+pdf_safe.ln(5)
+pdf_safe.add_section("Appliance Information")
+pdf_safe.cell(0, 8, "Type of Appliance: Refrigerator / Washer / Dryer / Range / Other: ____________", ln=True)
+pdf_safe.add_line("Brand:")
+pdf_safe.add_line("Model Number:")
+pdf_safe.add_line("Serial Number:")
+pdf_safe.add_line("Date of Purchase:")
+pdf_safe.cell(0, 8, "Proof of Purchase Attached? Yes / No", ln=True)
+pdf_safe.cell(0, 8, "Covered Under Warranty? Yes / No / Unsure", ln=True)
+
+# Issue Description
+pdf_safe.ln(5)
+pdf_safe.add_section("Issue Description")
+pdf_safe.add_multiline("Describe the issue (error codes, behavior, noises, etc.):")
+pdf_safe.add_line("When did the issue begin?")
+pdf_safe.cell(0, 8, "Has the appliance been serviced before? Yes / No", ln=True)
+pdf_safe.add_line("If yes, by whom and when?")
+
+# Contact Preferences
+pdf_safe.ln(5)
+pdf_safe.add_section("Contact Preferences")
+pdf_safe.cell(0, 8, "Preferred Contact Method: Phone / Text / Email", ln=True)
+pdf_safe.cell(0, 8, "Best Time to Reach You: Morning / Afternoon / Evening", ln=True)
+
+# Authorization
+pdf_safe.ln(5)
+pdf_safe.add_section("Authorization & Agreement")
+pdf_safe.cell(0, 8, "I certify that the above information is accurate. I authorize AMP Liquidations or", ln=True)
+pdf_safe.cell(0, 8, "an authorized technician to contact me to schedule a service appointment.", ln=True)
+pdf_safe.add_line("Signature:")
+pdf_safe.add_line("Date:")
+
+# Save the PDF
+pdf_output_path_safe = "/mnt/data/AMP_Service_Request_Form.pdf"
+pdf_safe.output(pdf_output_path_safe)
+
+pdf_output_path_safe
